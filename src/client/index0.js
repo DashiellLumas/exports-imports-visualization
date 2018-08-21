@@ -1,6 +1,4 @@
-import React, { Component } from "react";
-import "./app.css";
-import ReactImage from "./react.png";
+import React, {Component} from "react"
 import {ComposableMap, ZoomableGroup, Geographies, Geography} from "react-simple-maps"
 import ReactTooltip from "react-tooltip"
 import tooltip from "wsdm-tooltip"
@@ -11,16 +9,18 @@ const wrapperStyles = {
   margin: "0 auto"
 }
 
-export default class App extends Component {
+class BasicMap extends Component {
+
   constructor(props) {
     super(props);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
+    // this.fetchData = this.fetchData.bind(this);
   }
-
   componentDidMount() {
     this.tip = tooltip()
     this.tip.create()
+    // this.fetchData();
   }
 
   handleMouseMove(geography, event) {
@@ -39,7 +39,6 @@ export default class App extends Component {
   handleMouseLeave() {
     this.tip.hide()
   }
-
   render() {
     return (
       <div style={wrapperStyles}>
@@ -76,6 +75,8 @@ export default class App extends Component {
         </ComposableMap>
         <ReactTooltip/>
       </div>
-    );
+    )
   }
 }
+
+export default BasicMap
