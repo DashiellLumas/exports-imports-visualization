@@ -1,8 +1,5 @@
-h1 {
-  color: green;
-}
+@import url('https://fonts.googleapis.com/css?family=Audiowide');
 
-body {
-  text-align: center;
-  margin: auto;
+body{
+  font-family: 'Audiowide' !important, cursive;
 }
