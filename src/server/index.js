@@ -3,7 +3,7 @@ var cors = require('cors');
 require('dotenv').config();
 const axios = require('axios');
 const bodyParser = require("body-parser");
-const PORT = process.env.PORT || 8080;
+const PORT = process.env.PORT || 8081;
 const app = express();
 app.use(cors());
 var countryCodes = require('./model/countryCodes');
