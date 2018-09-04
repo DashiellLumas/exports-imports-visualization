@@ -93,7 +93,7 @@ export default class App extends Component {
           height: "auto"
         }}>
           <ZoomableGroup center={[0, 20]} disablePanning>
-            <Geographies geography="/static/world-50m.json">
+            <Geographies geography="./data/world-50m.json">
               {(geographies, projection) => geographies.map((geography, i) => geography.id !== "ATA" && (<Geography key={i} geography={geography} projection={projection} className="country" id={geography.properties.name} onClick={this.handleMouseClick} onMouseMove={this.handleMouseMove} onMouseLeave={this.handleMouseLeave} style={{
                 default: {
                   fill: "green",
@@ -104,7 +104,7 @@ export default class App extends Component {
                 hover: {
                   fill: "rgba(15,112,1,.02)",
                   stroke: "black",
-                  strokeWidth: 1.25,
+                  strokeWidth: .75,
                   outline: "none"
                 },
                 pressed: {

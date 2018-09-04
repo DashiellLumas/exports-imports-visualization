@@ -1,11 +1,15 @@
 const path = require("path");
+// const json = require('./pubworld-50m.json');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const CleanWebpackPlugin = require("clean-webpack-plugin");
+const CopyWebpackPlugin = require("copy-webpack-plugin");
 
 const outputDirectory = "dist";
-
+const data = "data"
 module.exports = {
-  entry: "./src/client/index.js",
+  entry: {
+    a: "./src/client/index.js"
+  },
   output: {
     path: path.join(__dirname, outputDirectory),
     filename: "bundle.js"
@@ -19,6 +23,10 @@ module.exports = {
           loader: "babel-loader"
         }
       },
+      {
+       test: /\.json$/,
+       use: 'json-loader'
+     },
       {
         test: /\.css$/,
         use: ["style-loader", "css-loader"]
@@ -40,7 +48,12 @@ module.exports = {
     new CleanWebpackPlugin([outputDirectory]),
     new HtmlWebpackPlugin({
       template: "./public/index.html",
-      favicon: "./public/favicon.ico"
-    })
+      favicon: "./public/favicon.ico",
+    }),
+    new CopyWebpackPlugin([
+      {
+        from: './public/static', to: data
+      }
+    ])
   ]
 };
