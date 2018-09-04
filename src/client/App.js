@@ -45,7 +45,7 @@ export default class App extends Component {
   }
 
   fetchData(country){
-    axios.get(`http://localhost:8080/api/countryCodes/${country}`)
+    axios.get(`/api/countryCodes/${country}`)
     .then((res) => {
       let totalImports = res.data[1][0];
       let totalExports = res.data[1][1];
