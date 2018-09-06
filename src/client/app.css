@@ -38,6 +38,7 @@ header{
 }
 .bottom-right{
   position: absolute;
+  color: white;
   width: 370px;
   bottom: 10px;
   left: 0;
