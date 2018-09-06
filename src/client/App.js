@@ -77,18 +77,21 @@ export default class App extends Component {
 
   render() {
     return (
-      <div style={wrapperStyles}>
-        <h1 className="center-text">USA Exports & Imports</h1>
-        <div className="speech-bubble">
+      <div>
+        <header>
+          <h1 className="center-text">U.S. Imports and Exports</h1>
+          <p className="center-text">International Trade by the US from 2005-2014</p>
+      </header>
+        {/* <div className="speech-bubble">
           <div>Export Value: ${this.state.totalExports}</div>
           <div>Import Value: ${this.state.totalImports}</div>
           <div>Country: {this.state.targetCountry}</div>
-        </div>
+        </div> */}
 
 
         <ComposableMap projectionConfig={{
-          scale: 205
-        }} width={980} height={551} style={{
+          scale: 225
+        }} width={1080} height={551} style={{
           width: "100%",
           height: "auto"
         }}>
@@ -96,9 +99,9 @@ export default class App extends Component {
             <Geographies geography="./data/world-50m.json">
               {(geographies, projection) => geographies.map((geography, i) => geography.id !== "ATA" && (<Geography key={i} geography={geography} projection={projection} className="country" id={geography.properties.name} onClick={this.handleMouseClick} onMouseMove={this.handleMouseMove} onMouseLeave={this.handleMouseLeave} style={{
                 default: {
-                  fill: "green",
+                  fill: "white",
                   stroke: "black",
-                  strokeWidth: 1.25,
+                  strokeWidth: .75,
                   outline: "none"
                 },
                 hover: {
@@ -115,9 +118,11 @@ export default class App extends Component {
                 }
               }}/>))}
             </Geographies>
+
           </ZoomableGroup>
         </ComposableMap>
         <ReactTooltip/>
+        <div class="bottom-right">Data from the U.S. Census Bureau International Trade database  </div>
       </div>
     );
   }
