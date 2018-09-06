@@ -1,10 +1,13 @@
-import React, { Component } from "react";
+import React, {Component} from "react";
 import ReactImage from "./react.png";
+import $ from 'jquery';
+import Popper from 'popper.js';
 import {ComposableMap, ZoomableGroup, Geographies, Geography} from "react-simple-maps"
 import ReactTooltip from "react-tooltip"
 import tooltip from "wsdm-tooltip"
 import axios from "axios";
-import 'bootstrap/dist/css/bootstrap.min.css';
+// import 'bootstrap/dist/css/bootstrap.min.css';
+import {Modal, OverlayTrigger, popover, Button, PageHeader} from 'react-bootstrap';
 import "./app.css";
 const wrapperStyles = {
   width: "100%",
@@ -20,11 +23,14 @@ export default class App extends Component {
       totalImports: null,
       totalExports: null,
       targetCountry: null,
+      show: false
     }
     this.handleMouseClick = this.handleMouseClick.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
     this.handleMouseMove = this.handleMouseMove.bind(this);
     this.fetchData = this.fetchData.bind(this);
+    this.handleShow = this.handleShow.bind(this);
+    this.handleClose = this.handleClose.bind(this);
   }
 
   componentDidMount() {
@@ -32,7 +38,16 @@ export default class App extends Component {
     this.tip.create()
   }
 
-  handleMouseMove(geography,event){
+  handleClose() {
+    this.setState({show: false});
+  }
+
+  handleShow() {
+    this.setState({show: true});
+    console.log("works")
+  }
+
+  handleMouseMove(geography, event) {
     this.tip.show(`<div class="tooltip-inner">
     ${geography.properties.name}
   </div>
@@ -40,29 +55,26 @@ export default class App extends Component {
     this.tip.position({pageX: event.pageX, pageY: event.pageY})
   }
   handleMouseClick(geography, event) {
+    // this.setState({show: true});
     let country = `${geography.properties.name}`;
-    this.setState({country: country}, () => this.fetchData(this.state.country));
+    this.setState({
+      show: true,
+      country: country
+    }, () => this.fetchData(this.state.country));
   }
 
-  fetchData(country){
-    axios.get(`/api/countryCodes/${country}`)
-    .then((res) => {
+  fetchData(country) {
+    axios.get(`/api/countryCodes/${country}`).then((res) => {
       let totalImports = res.data[1][0];
       let totalExports = res.data[1][1];
       let targetCountry = res.data[1][2];
-      this.setState({
-        totalExports: totalExports,
-        totalImports: totalImports,
-        targetCountry: targetCountry
-      })
-    })
-    .catch((error) => {
-      if(error.res){
+      this.setState({totalExports: totalExports, totalImports: totalImports, targetCountry: targetCountry})
+    }).catch((error) => {
+      if (error.res) {
         console.log(error.res.data);
         console.log(error.res.status);
         console.log(error.res.headers);
-      }
-      else if(error.request){
+      } else if (error.request) {
         console.log(error.request)
 
       } else {
@@ -78,17 +90,10 @@ export default class App extends Component {
   render() {
     return (
       <div>
-        <header>
+        <PageHeader className="header">
           <h1 className="center-text">U.S. Imports and Exports</h1>
-          <p className="center-text">International Trade by the US from 2005-2014</p>
-      </header>
-        {/* <div className="speech-bubble">
-          <div>Export Value: ${this.state.totalExports}</div>
-          <div>Import Value: ${this.state.totalImports}</div>
-          <div>Country: {this.state.targetCountry}</div>
-        </div> */}
-
-
+          <p className="center-text desc">International Trade with the US from 2005-2014</p>
+        </PageHeader>
         <ComposableMap projectionConfig={{
           scale: 225
         }} width={1080} height={551} style={{
@@ -122,7 +127,20 @@ export default class App extends Component {
           </ZoomableGroup>
         </ComposableMap>
         <ReactTooltip/>
-        <div class="bottom-right">Data from the U.S. Census Bureau International Trade database  </div>
+        <div className="bottom-right">Data from the U.S. Census Bureau International Trade database
+        </div>
+        <Modal show={this.state.show} onHide={this.handleClose}>
+          <Modal.Header closeButton>
+            <Modal.Title>{this.state.targetCountry}</Modal.Title>
+          </Modal.Header>
+          <Modal.Body>
+              <div>Export Value: ${this.state.totalExports}</div>
+              <div>Import Value: ${this.state.totalImports}</div>
+          </Modal.Body>
+          <Modal.Footer>
+            <Button onClick={this.handleClose}>Close</Button>
+          </Modal.Footer>
+        </Modal>
       </div>
     );
   }
