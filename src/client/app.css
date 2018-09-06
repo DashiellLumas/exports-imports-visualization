@@ -35,8 +35,7 @@ body{
   border: none;
   margin-top: -2%;
   margin-bottom: 1%;
-  /* margin: 0 auto; */
-  /* padding: 0 */
+
 }
 .desc {
   font-size: 17px;
@@ -51,4 +50,22 @@ body{
   width: 370px;
   bottom: 10px;
   left: 0;
+}
+
+.export {
+  color: #A9A9A9
+}
+.import {
+  color:#90EE90
+}
+
+#piechart1{
+  margin-top: 5%;
+  margin-left: 25%;
+  /* margin-right: 20%; */
+}
+.value-text {
+  font-family: 'Monserrat' !important;
+  font-size: 1.3em;
+  text-align: center;
 }

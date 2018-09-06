@@ -1,12 +1,11 @@
 import React, {Component} from "react";
-import ReactImage from "./react.png";
 import $ from 'jquery';
 import Popper from 'popper.js';
 import {ComposableMap, ZoomableGroup, Geographies, Geography} from "react-simple-maps"
 import ReactTooltip from "react-tooltip"
 import tooltip from "wsdm-tooltip"
 import axios from "axios";
-// import 'bootstrap/dist/css/bootstrap.min.css';
+import c3 from "c3";
 import {Modal, OverlayTrigger, popover, Button, PageHeader} from 'react-bootstrap';
 import "./app.css";
 const wrapperStyles = {
@@ -23,7 +22,8 @@ export default class App extends Component {
       totalImports: null,
       totalExports: null,
       targetCountry: null,
-      show: false
+      show: false,
+      data: null
     }
     this.handleMouseClick = this.handleMouseClick.bind(this);
     this.handleMouseLeave = this.handleMouseLeave.bind(this);
@@ -31,6 +31,31 @@ export default class App extends Component {
     this.fetchData = this.fetchData.bind(this);
     this.handleShow = this.handleShow.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.renderChart = this.renderChart.bind(this);
+  }
+
+  renderChart(){
+    let chart = c3.generate({
+      bindto: '#piechart1',
+      size: {
+        width: 300,
+        height: 300
+      },
+      donut: {
+        title: this.state.targetCountry
+      },
+    data: {
+        columns: [
+          ['import', this.state.totalImports],
+          ['export', this.state.totalExports]
+        ],
+            type: 'pie',
+            colors: {
+              export:'#A9A9A9',
+              import: '#90EE90'
+            }
+    }
+});
   }
 
   componentDidMount() {
@@ -54,8 +79,9 @@ export default class App extends Component {
     `)
     this.tip.position({pageX: event.pageX, pageY: event.pageY})
   }
+
+
   handleMouseClick(geography, event) {
-    // this.setState({show: true});
     let country = `${geography.properties.name}`;
     this.setState({
       show: true,
@@ -68,8 +94,11 @@ export default class App extends Component {
       let totalImports = res.data[1][0];
       let totalExports = res.data[1][1];
       let targetCountry = res.data[1][2];
-      this.setState({totalExports: totalExports, totalImports: totalImports, targetCountry: targetCountry})
-    }).catch((error) => {
+      this.setState({ data: res.data, totalExports: totalExports, totalImports: totalImports, targetCountry: targetCountry})
+      console.log(this.state.data);
+      this.renderChart()
+    })
+    .catch((error) => {
       if (error.res) {
         console.log(error.res.data);
         console.log(error.res.status);
@@ -131,11 +160,12 @@ export default class App extends Component {
         </div>
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title>{this.state.targetCountry}</Modal.Title>
+            <Modal.Title className="value-text">{this.state.targetCountry}</Modal.Title>
           </Modal.Header>
           <Modal.Body>
-              <div>Export Value: ${this.state.totalExports}</div>
-              <div>Import Value: ${this.state.totalImports}</div>
+              <div className="value-text"><span className="export">Export Value:</span>${this.state.totalExports}</div>
+              <div className="value-text"><span className="import">Import Value:</span>${this.state.totalImports}</div>
+                      <div id="piechart1"></div>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.handleClose}>Close</Button>
