@@ -15,16 +15,17 @@ app.listen(PORT, () => {
   console.log("application listening on port:", PORT);
 })
 
-function fetchCountryCode(countryCode, response) {
-  axios.get(`https://api.census.gov/data/2014/intltrade/imp_exp?get=IMPALL2014,EXPALL2014,COUNTRY&SCHEDULE=${countryCode}&key=${CENSUS_KEY}`)
+function fetchCountryCode(countryCode, response,year) {
+  axios.get(`https://api.census.gov/data/2014/intltrade/imp_exp?get=IMPALL${year},EXPALL${year},COUNTRY&SCHEDULE=${countryCode}&key=${CENSUS_KEY}`)
   .then(res => {
     console.log(res.data)
     response.json(res.data);
   })
 }
 
-app.get('/api/countryCodes/:country', function(req,response,next){
+app.get('/api/countryCodes/:country/:year', function(req,response,next){
+  let year = req.params.year;
   let country = req.params.country;
   let countryCode = countryCodes[country];
-  fetchCountryCode(countryCode,response);
+  fetchCountryCode(countryCode,response,year);
 })
