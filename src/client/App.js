@@ -7,7 +7,16 @@ import tooltip from "wsdm-tooltip"
 import axios from "axios";
 import c3 from "c3";
 import formatMoney from "accounting-js/lib/formatMoney.js";
-import {Modal, OverlayTrigger, popover, Button, PageHeader, FormControl, FormGroup, ControlLabel} from 'react-bootstrap';
+import {
+  Modal,
+  OverlayTrigger,
+  popover,
+  Button,
+  PageHeader,
+  FormControl,
+  FormGroup,
+  ControlLabel
+} from 'react-bootstrap';
 import "./app.css";
 const wrapperStyles = {
   width: "100%",
@@ -38,7 +47,7 @@ export default class App extends Component {
     // this.fetchDataByYear = this.fetchDataByYear.bind(this);
   }
 
-  renderChart(){
+  renderChart() {
     let chart = c3.generate({
       bindto: '#piechart1',
       size: {
@@ -48,18 +57,20 @@ export default class App extends Component {
       donut: {
         title: this.state.targetCountry
       },
-    data: {
+      data: {
         columns: [
-          ['import', this.state.totalImports],
+          [
+            'import', this.state.totalImports
+          ],
           ['export', this.state.totalExports]
         ],
-            type: 'pie',
-            colors: {
-              export:'#A9A9A9',
-              import: '#90EE90'
-            }
-    }
-});
+        type: 'pie',
+        colors: {
+          export: '#A9A9A9',
+          import: '#90EE90'
+        }
+      }
+    });
   }
 
   componentDidMount() {
@@ -75,8 +86,9 @@ export default class App extends Component {
     this.setState({show: true});
   }
 
-  handleYearChange(event){
-    this.setState({year: event.target.value})
+  handleYearChange(event) {
+    this.setState({year: event.target.value}, () => this.fetchData(this.state.country))
+
   }
 
   handleMouseMove(geography, event) {
@@ -86,7 +98,6 @@ export default class App extends Component {
     `)
     this.tip.position({pageX: event.pageX, pageY: event.pageY})
   }
-
 
   handleMouseClick(geography, event) {
     let country = `${geography.properties.name}`;
@@ -101,11 +112,10 @@ export default class App extends Component {
       let totalImports = res.data[1][0];
       let totalExports = res.data[1][1];
       let targetCountry = res.data[1][2];
-      this.setState({ data: res.data, totalExports: totalExports, totalImports: totalImports, targetCountry: targetCountry})
+      this.setState({data: res.data, totalExports: totalExports, totalImports: totalImports, targetCountry: targetCountry})
       console.log(this.state.data);
       this.renderChart()
-    })
-    .catch((error) => {
+    }).catch((error) => {
       if (error.res) {
         console.log(error.res.data);
         console.log(error.res.status);
@@ -128,7 +138,7 @@ export default class App extends Component {
       <div>
         <PageHeader className="header">
           <h1 className="center-text">U.S. Imports and Exports</h1>
-          <p className="center-text desc">International Trade with the US from 2005-2014</p>
+          <p className="center-text desc">International Trade with the US from 2005-2014. Click a country.</p>
         </PageHeader>
         <ComposableMap projectionConfig={{
           scale: 225
@@ -167,29 +177,35 @@ export default class App extends Component {
         </div>
         <Modal show={this.state.show} onHide={this.handleClose}>
           <Modal.Header closeButton>
-            <Modal.Title className="value-text">{this.state.targetCountry}
-              <FormGroup controlId="formControlsSelect">
-        <FormControl componentClass="select" placeholder="select" onChange={this.handleYearChange}>
-          <option value="2005">2005</option>
-          <option value="2006">2006</option>
-          <option value="2007">2007</option>
-          <option value="2008">2008</option>
-          <option value="2009">2009</option>
-          <option value="2010">2010</option>
-          <option value="2011">2011</option>
-          <option value="2012">2012</option>
-          <option value="2013">2013</option>
-          <option value="2014">2014</option>
+            <div className="country-year-container">
+              <Modal.Title className="value-text"><h1 className="country-header">{this.state.targetCountry}</h1>
+                <FormGroup controlId="formControlsSelect">
+                  <FormControl className="select-form" componentClass="select" placeholder="select" onChange={this.handleYearChange}>
+                    <option value="2005">2005</option>
+                    <option value="2006">2006</option>
+                    <option value="2007">2007</option>
+                    <option value="2008">2008</option>
+                    <option value="2009">2009</option>
+                    <option value="2010">2010</option>
+                    <option value="2011">2011</option>
+                    <option value="2012">2012</option>
+                    <option value="2013">2013</option>
+                    <option value="2014">2014</option>
+                  </FormControl>
+                </FormGroup>
+                </Modal.Title>
+            </div>
 
-        </FormControl>
-      </FormGroup>
-              <Button type="submit" onClick={() => this.fetchData(this.state.country)}>Select Year</Button>
-            </Modal.Title>
+
           </Modal.Header>
           <Modal.Body>
-              <div className="value-text"><span className="export">Export Value:</span> {formatMoney(this.state.totalExports, {precision: 0})}</div>
-              <div className="value-text"><span className="import">Import Value:</span> {formatMoney(this.state.totalImports, {precision:0})}</div>
-                      <div id="piechart1"></div>
+            <div className="value-text">
+              <span className="export">Export Value:</span>
+              {formatMoney(this.state.totalExports, {precision: 0})}</div>
+            <div className="value-text">
+              <span className="import">Import Value:</span>
+              {formatMoney(this.state.totalImports, {precision: 0})}</div>
+            <div id="piechart1"></div>
           </Modal.Body>
           <Modal.Footer>
             <Button onClick={this.handleClose}>Close</Button>

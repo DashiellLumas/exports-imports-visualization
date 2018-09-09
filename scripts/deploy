@@ -1,0 +1,11 @@
+#!/bin/sh
+
+
+ssh root@138.197.72.102 -i ~/keyfilename.rsa <<EOF
+cd ~/us-exports-imports-map
+git pull
+npm install
+npm run build
+forever restart src/server/index.js
+exit
+EOF

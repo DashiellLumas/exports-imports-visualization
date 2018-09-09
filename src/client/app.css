@@ -69,3 +69,25 @@ body{
   font-size: 1.3em;
   text-align: center;
 }
+
+#formControlsSelect{
+  width:100px;
+}
+.modal-header{
+  color: white;
+background-color: rgb(32,32,32);
+/* display: inline-block; */
+}
+.country-header{
+  margin-top: -1%;
+  display: inline-block !important;
+
+}
+.select-form{
+margin: 0 auto;
+margin-bottom: -2%;
+}
+
+option {
+    font-family: 'Monserrat' !important;
+}
