@@ -11,10 +11,10 @@ var countryCodes = require('./model/countryCodes');
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 app.use(express.static('dist'));
-app.listen(PORT, () => {
-  console.log("application listening on port:", PORT);
-})
-
+// app.listen(PORT, () => {
+//   console.log("application listening on port:", PORT);
+// })
+app.listen(PORT, "0.0.0.0");
 function fetchCountryCode(countryCode, response,year) {
   axios.get(`https://api.census.gov/data/2014/intltrade/imp_exp?get=IMPALL${year},EXPALL${year},COUNTRY&SCHEDULE=${countryCode}&key=${CENSUS_KEY}`)
   .then(res => {
